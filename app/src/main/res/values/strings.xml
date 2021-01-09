@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Заметки</string>
+    <string name="edit_note_text">Редактирование заметки</string>
+    <string name="add_note_text">Добавление заметки</string>
+    <string name="name_note_text">Название заметки</string>
+    <string name="save_text">Сохранить</string>
+    <string name="update_note_text">Обновить заметку</string>
+</resources>
