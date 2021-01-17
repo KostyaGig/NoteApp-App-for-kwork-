@@ -12,6 +12,9 @@ import com.kostya_ubutnu.notes.repositories.NoteRepository;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
+
 public class NoteViewmodel extends AndroidViewModel {
 
     private NoteRepository repository;

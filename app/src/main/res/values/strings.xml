@@ -5,4 +5,6 @@
     <string name="name_note_text">Название заметки</string>
     <string name="save_text">Сохранить</string>
     <string name="update_note_text">Обновить заметку</string>
+    <string name="time_in_seconds">Время в секундах</string>
+    <string name="note_text">Текст заметки</string>
 </resources>

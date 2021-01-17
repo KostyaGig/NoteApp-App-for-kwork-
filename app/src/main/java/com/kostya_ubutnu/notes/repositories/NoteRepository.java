@@ -63,15 +63,18 @@ public class NoteRepository {
     }
 
     public void updateNote(Note note){
+        Log.d("NoteUpdated","REPOSITORY NOTE UPDATED!");
         noteDao.updateNote(note);
     }
 
     public void deleteNote(Note note){
+        Log.d("AlarmService","Delete note!");
         noteDao.deleteNote(note);
     }
 
     public MutableLiveData<List<Note>> getNotes(){
         return allNotes;
     }
+
 
 }
