@@ -3,20 +3,32 @@ package com.kostya_ubutnu.notes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+
+
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.TextView;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.jakewharton.rxbinding4.widget.RxTextView;
 import com.kostya_ubutnu.notes.adapters.Adapter;
 import com.kostya_ubutnu.notes.interfaces.AdapterLIstener;
 import com.kostya_ubutnu.notes.models.Note;
@@ -25,10 +37,15 @@ import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Predicate;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,AdapterLIstener {
-
-
 
     public static final String EXTRA_NOTE = "Note";
 
@@ -36,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int EXTRA_EDIT_NOTE = 2;
 
     private NoteViewmodel viewmodel;
-    private Observer<List<Note>> observer;
+    private Observer<List<Note>> usuallyObserver;
+    private Observer<List<Note>> searchObserver;
 
     private RecyclerView recyclerView;
     private List<Note> listNote = new ArrayList<>();
@@ -44,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FloatingActionButton fab;
 
+    private TextView noteCounter;
+    private EditText fieldSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,31 +74,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         init();
         initRecyclerView();
 
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         if (getIntent().hasExtra(MainActivity.EXTRA_NOTE)) {
-
             Note note =(Note) getIntent().getSerializableExtra(EXTRA_NOTE);
-
             if (note != null){
                 showNotification(note);
-
             } else {
                 Log.d("AlarmService","Mainactivity note == null");
             }
 
         }
 
-        observer = new Observer<List<Note>>() {
+        usuallyObserver = new Observer<List<Note>>() {
             @Override
             public void onChanged(List<Note> notes) {
-                
-                for (Note note:notes){
-                    Log.d("SelectedTime" ,"Note selected time " + note.getSelectedTime());
-                }
-                listNote = notes;
-                Log.d("NoteTimer","Main activity Note size = " + notes.size());
 
-                Log.d("NoteTimer","ONCHANGED");
+                Log.d("SearchView1","ONCHANGED");
+                Log.d("SearchView1","USUALLY onchanged size = " + notes.size());
+
+                if (notes.size() == 0){
+                    Log.d("SearchView1","notes == null");
+                } else {
+                    Log.d("SearchView1","notes != null");
+                }
+
+                noteCounter.setText("Заметок всего:" +" " + notes.size());
+                listNote = notes;
+                adapter.setList(notes);
+            }
+        };
+
+        searchObserver = new Observer<List<Note>>() {
+            @Override
+            public void onChanged(List<Note> notes) {
+
+                noteCounter.setText("Заметок всего:" + " " + notes.size());
+                Log.d("SearchView1","SEARCH onchanged size = " + notes.size());
+
+                listNote = notes;
                 adapter.setList(notes);
             }
         };
@@ -86,6 +120,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab.setOnClickListener(this);
         adapter.setListener(this);
 
+        RxTextView.textChanges(fieldSearch)
+                .debounce(100,TimeUnit.MILLISECONDS)
+                .observeOn(Schedulers.computation())
+                .filter(charSequence -> charSequence.length() != 0)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new io.reactivex.rxjava3.core.Observer<CharSequence>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(@io.reactivex.rxjava3.annotations.NonNull CharSequence charSequence) {
+                        Log.d("SerarchView1","MAINACTIVITY ONNEXT " + charSequence.toString());
+                        viewmodel.getNotesOnTitle(charSequence.toString());
+
+                        Log.d("SerarchView1","lengt = " + charSequence.length());
+                        if (charSequence.length() == 0){
+                            viewmodel.getAllNotes();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                        Log.d("SearchView1","error : " +e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void initRecyclerView() {
@@ -103,6 +171,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void init() {
         fab = findViewById(R.id.fab);
+        noteCounter = findViewById(R.id.note_counter_tv);
+        fieldSearch = findViewById(R.id.field_search);
         viewmodel = ViewModelProviders.of(this).get(NoteViewmodel.class);
     }
 
@@ -116,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        viewmodel.getNotes().removeObserver(observer);
+        viewmodel.getNotes().removeObserver(usuallyObserver);
     }
 
 
@@ -149,7 +219,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
         Log.d("dateformat","onstart");
-        viewmodel.getNotes().observe(this,observer);
+        viewmodel.getNotes().observe(this,usuallyObserver);
+        viewmodel.getSearchNotes().observe(this,searchObserver);
     }
 
     @Override
@@ -209,7 +280,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                  .enableSwipeToDismiss()
                  .setDuration(5000)
                  .show();
-//
     }
 
 

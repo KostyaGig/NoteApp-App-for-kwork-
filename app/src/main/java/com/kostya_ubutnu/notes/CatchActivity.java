@@ -11,6 +11,7 @@ import com.kostya_ubutnu.notes.models.Note;
 import com.kostya_ubutnu.notes.viewmodels.NoteViewmodel;
 
 import static com.kostya_ubutnu.notes.services.AlarmReceiver.DATE_NOTE;
+import static com.kostya_ubutnu.notes.services.AlarmReceiver.DAY_OF_MONTH;
 import static com.kostya_ubutnu.notes.services.AlarmReceiver.HOURS_NOTE;
 import static com.kostya_ubutnu.notes.services.AlarmReceiver.ID_NOTE;
 import static com.kostya_ubutnu.notes.services.AlarmReceiver.MINUTES_NOTE;
@@ -35,15 +36,14 @@ public class CatchActivity extends AppCompatActivity {
         String title = getIntent().getStringExtra(TITLE_NOTE);
         String hours = getIntent().getStringExtra(HOURS_NOTE);
         String minutes = getIntent().getStringExtra(MINUTES_NOTE);
+        String dayOfMonth = getIntent().getStringExtra(DAY_OF_MONTH);
         String text = getIntent().getStringExtra(TEXT_NOTE);
 
-
-
-        if (id != -1 && title != null && hours != null && minutes != null && date != null && text != null){
+        if (id != -1 && title != null && hours != null && minutes != null && dayOfMonth != null && date != null && text != null){
             Log.d("AlarmService","CATCH ACTIVITY note != null note id = " + id + " title = " + title + " hour = " + hours + " minutes " + minutes);
 
 
-            Note note = new Note(date,title,text,hours,time,null);
+            Note note = new Note(date,title,text,hours,time,null,null);
             note.setId(id);
 
             viewmodel.updateNote(note);

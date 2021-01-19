@@ -25,7 +25,11 @@ public interface NoteDao {
     @Delete
     void deleteNote(Note note);
 
-    @Query("SELECT * FROM NoteTable")
+    @Query("SELECT * FROM NoteTable2")
     Observable<List<Note>> getAllNotes();
+
+    @Query("SELECT * FROM  notetable2 WHERE title = :title")
+    Observable<List<Note>> getNotesOnTitle(String title);
+
 
 }

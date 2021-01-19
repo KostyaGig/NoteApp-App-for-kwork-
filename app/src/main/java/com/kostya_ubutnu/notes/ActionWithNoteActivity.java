@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,10 +13,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -32,6 +37,11 @@ public class ActionWithNoteActivity extends AppCompatActivity {
    private Note clickedNote;
 
    private EditText fieldTitle,fieldText;
+   private ScrollView scrollView;
+
+   private TimePicker timePicker;
+   private DatePicker datePicker;
+
 //   private Button actionBtn;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -42,6 +52,13 @@ public class ActionWithNoteActivity extends AppCompatActivity {
 
         fieldTitle = findViewById(R.id.field_title);
         fieldText  = findViewById(R.id.field_text);
+
+        scrollView = findViewById(R.id.scroll_view);
+
+        timePicker = findViewById(R.id.field_timer);
+        datePicker = findViewById(R.id.field_date);
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 //        actionBtn = findViewById(R.id.action_btn);
 
@@ -63,7 +80,6 @@ public class ActionWithNoteActivity extends AppCompatActivity {
             } else {
                 toolbar.setTitle(getResources().getString(R.string.add_note_text));
             }
-
 
     }
 
@@ -103,7 +119,7 @@ public class ActionWithNoteActivity extends AppCompatActivity {
         }
         String title = fieldTitle.getText().toString().trim();
         String text = fieldText.getText().toString().trim();
-        TimePicker picker = findViewById(R.id.field_timer);
+
         Intent dataIntent = new Intent();
 
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(text)){
@@ -113,14 +129,17 @@ public class ActionWithNoteActivity extends AppCompatActivity {
 
             Calendar calendar = Calendar.getInstance();
 
-            calendar.set(Calendar.HOUR_OF_DAY,picker.getHour());
-            calendar.set(Calendar.MINUTE,picker.getMinute());
+            calendar.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
+            calendar.set(Calendar.MINUTE,timePicker.getMinute());
+            calendar.set(Calendar.DAY_OF_MONTH,datePicker.getDayOfMonth());
 
-            int hour = picker.getHour();
-            int minute = picker.getMinute();
+            int hour = timePicker.getHour();
+            int minute = timePicker.getMinute();
+            int day = datePicker.getDayOfMonth();
 
             String hourS = String.valueOf(hour);
             String minuteS = String.valueOf(minute);
+            String dayS = String.valueOf(day);
 
 
             long selectedTime = calendar.getTimeInMillis();
@@ -134,7 +153,7 @@ public class ActionWithNoteActivity extends AppCompatActivity {
             }
 
             Log.d("NoteTimer","Curren time = " + selectedTime);
-            note = new Note(getCurrentDate(),title,text,hourS,minuteS,selectedTime);
+            note = new Note(getCurrentDate(),title,text,hourS,minuteS,dayS,selectedTime);
 
 
         if (clickedNote != null){

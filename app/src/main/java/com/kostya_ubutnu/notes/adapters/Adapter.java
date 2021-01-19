@@ -103,7 +103,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 timer.setText(note.getMinute());
             } else {
                 timer.setTextColor(itemView.getContext().getResources().getColor(R.color.color_red_text));
-                timer.setText("Событие будет выполнено в " + note.getHour() + " часа(ов) " + note.getMinute() + " минут(ы)");
+                timer.setText("Событие будет выполнено " + note.getDayOfMonth() + " числа" +" в " + note.getHour() + " часа(ов) " + note.getMinute() + " минут(ы)");
 
                 Intent broadCastIntent = new Intent(itemView.getContext(), AlarmReceiver.class);
 
@@ -112,6 +112,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 broadCastIntent.putExtra(AlarmReceiver.TITLE_NOTE, note.getTitle());
                 broadCastIntent.putExtra(AlarmReceiver.HOURS_NOTE, note.getHour());
                 broadCastIntent.putExtra(AlarmReceiver.MINUTES_NOTE, note.getMinute());
+                broadCastIntent.putExtra(AlarmReceiver.DAY_OF_MONTH,note.getDayOfMonth());
                 broadCastIntent.putExtra(AlarmReceiver.TEXT_NOTE, note.getText());
 
                 AlarmManager manager = (AlarmManager) itemView.getContext().getSystemService(Context.ALARM_SERVICE);

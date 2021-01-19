@@ -1,32 +1,38 @@
 package com.kostya_ubutnu.notes.models;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
 
 import java.io.Serializable;
 
-@Entity(tableName = "NoteTable")
+@Entity(tableName = "NoteTable2")
 public class Note implements Serializable {
 
     private @PrimaryKey(autoGenerate = true) int id;
     private String date;
+
+    @ColumnInfo(name = "title")
     private String title;
+
     private String text;
 
     private String hour;
     private String minute;
+    private String dayOfMonth;
     private Long selectedTime;
     public Note() {
     }
 
 
-    public Note(String date, String title, String text, String hour, String minute, Long selectedTime) {
+    public Note(String date, String title, String text, String hour, String minute,String dayOfMonth, Long selectedTime) {
         this.date = date;
         this.title = title;
         this.text = text;
         this.hour = hour;
         this.minute = minute;
+        this.dayOfMonth = dayOfMonth;
         this.selectedTime = selectedTime;
     }
 
@@ -84,5 +90,13 @@ public class Note implements Serializable {
 
     public void setSelectedTime(Long selectedTime) {
         this.selectedTime = selectedTime;
+    }
+
+    public String getDayOfMonth() {
+        return dayOfMonth;
+    }
+
+    public void setDayOfMonth(String dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
     }
 }
