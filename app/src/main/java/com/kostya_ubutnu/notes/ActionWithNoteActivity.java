@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -31,18 +32,26 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.IllegalFormatCodePointException;
 
-public class ActionWithNoteActivity extends AppCompatActivity {
+public class ActionWithNoteActivity extends AppCompatActivity implements View.OnClickListener{
 
-   private Toolbar toolbar;
-   private Note clickedNote;
 
-   private EditText fieldTitle,fieldText;
-   private ScrollView scrollView;
+    private Toolbar toolbar;
+    private Note clickedNote;
 
-   private TimePicker timePicker;
-   private DatePicker datePicker;
+    private EditText fieldTitle,fieldText;
 
-//   private Button actionBtn;
+    private Button selectDateBtn,selectTimeBtn;
+
+    private Calendar calendar = Calendar.getInstance();
+    private DatePickerDialog.OnDateSetListener dateListener;
+    private TimePickerDialog.OnTimeSetListener timeListener;
+   
+    int hour = 0;
+    int minute = 0;
+    int day = 0;
+
+
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,21 +62,11 @@ public class ActionWithNoteActivity extends AppCompatActivity {
         fieldTitle = findViewById(R.id.field_title);
         fieldText  = findViewById(R.id.field_text);
 
-        scrollView = findViewById(R.id.scroll_view);
+        selectDateBtn = findViewById(R.id.select_date_btn);
+        selectTimeBtn = findViewById(R.id.select_time_btn);
 
-        timePicker = findViewById(R.id.field_timer);
-        datePicker = findViewById(R.id.field_date);
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-//        actionBtn = findViewById(R.id.action_btn);
-
-//        actionBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                saveNote();
-//            }
-//        });
 
         clickedNote = (Note) getIntent().getSerializableExtra(MainActivity.EXTRA_NOTE);
 
@@ -75,11 +74,27 @@ public class ActionWithNoteActivity extends AppCompatActivity {
                 toolbar.setTitle(getResources().getString(R.string.edit_note_text));
                 fieldTitle.setText(clickedNote.getTitle());
                 fieldText.setText(clickedNote.getText());
-//                actionBtn.setText(getResources().getString(R.string.update_note_text));
 
             } else {
                 toolbar.setTitle(getResources().getString(R.string.add_note_text));
             }
+
+
+            selectDateBtn.setOnClickListener(this);
+            selectTimeBtn.setOnClickListener(this);
+
+            dateListener = (view, year, month, dayOfMonth) -> {
+                day = dayOfMonth;
+                Log.d("CurrentNote","listener date day -> " + day);
+            };
+
+            timeListener = (view, hourOfDay, minuteOfHour) -> {
+                hour = hourOfDay;
+
+
+                minute = minuteOfHour;
+                Log.d("CurrentNote","listener time hour  > " + hour + " minute ->> " + minute + " day -> " + day + " ---currentTimeInMillis--- " + calendar.getTimeInMillis());
+            };
 
     }
 
@@ -110,37 +125,34 @@ public class ActionWithNoteActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void saveNote(){
-        Note note;
 
+        Note note;
         if (clickedNote == null) {
-            Log.d("dateformat", "clicked note = null");
+            Log.d("CurrentNote", "clicked note = null");
         } else {
-            Log.d("dateformat","clicked note != null");
+            Log.d("CurrentNote","clicked note != null");
         }
         String title = fieldTitle.getText().toString().trim();
         String text = fieldText.getText().toString().trim();
 
-        Intent dataIntent = new Intent();
 
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(text)){
             Toast.makeText(this, "Введите название заметки и ее текст!", Toast.LENGTH_SHORT).show();
             return;
+        } else if (hour == 0 || day == 0 || minute == 0){
+            Toast.makeText(this, "Настройте дату и время!", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-            Calendar calendar = Calendar.getInstance();
+            Intent mainIntentNote = new Intent();
 
-            calendar.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
-            calendar.set(Calendar.MINUTE,timePicker.getMinute());
-            calendar.set(Calendar.DAY_OF_MONTH,datePicker.getDayOfMonth());
-
-            int hour = timePicker.getHour();
-            int minute = timePicker.getMinute();
-            int day = datePicker.getDayOfMonth();
+            calendar.set(Calendar.HOUR_OF_DAY,hour);
+            calendar.set(Calendar.MINUTE,minute);
+            calendar.set(Calendar.DAY_OF_MONTH,day);
 
             String hourS = String.valueOf(hour);
             String minuteS = String.valueOf(minute);
             String dayS = String.valueOf(day);
-
 
             long selectedTime = calendar.getTimeInMillis();
 
@@ -152,19 +164,29 @@ public class ActionWithNoteActivity extends AppCompatActivity {
                 minuteS = "0" + minute;
             }
 
-            Log.d("NoteTimer","Curren time = " + selectedTime);
+            Log.d("CurrentNote","SAVE NOTE current hour -> " + hourS + " current minute -> " + minuteS + " current day -> " + dayS + "----------CurrentTime------->>>> " + calendar.getTimeInMillis() + "CurrentTime = " + selectedTime);
+
             note = new Note(getCurrentDate(),title,text,hourS,minuteS,dayS,selectedTime);
+
+            if (note == null){
+                Log.d("CurrentNote","NOTE = NULL");
+            } else {
+                Log.d("CurrentNote","Note != NULL");
+                Log.d("CurrentNote","id " + note.getId() + " current time -> " + note.getSelectedTime());
+            }
 
 
         if (clickedNote != null){
-            Log.d("dateformat","id clicked note = " + clickedNote.getId());
+            Log.d("CurrentNote","id clicked note = " + clickedNote.getId());
+            //Устанавливаем новой записи id старой записи для оьновления записи по Id
             note.setId(clickedNote.getId());
-            Log.d("dateformat","sending note id  = " + note.getId());
+            Log.d("CurrentNote","sending note id  = " + note.getId());
         }
 
-        dataIntent.putExtra(MainActivity.EXTRA_NOTE,note);
-        setResult(RESULT_OK,dataIntent);
+        setResult(RESULT_OK,mainIntentNote);
+        mainIntentNote.putExtra(MainActivity.EXTRA_NOTE,note);
         finish();
+
     }
 
 
@@ -181,6 +203,28 @@ public class ActionWithNoteActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_notes,menu);
         return true;
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.select_date_btn:
+                selectDate();
+                break;
+            case R.id.select_time_btn:
+                selectTime();
+                break;
+        }
+
+    }
+
+    private void selectDate(){
+        new DatePickerDialog(ActionWithNoteActivity.this,dateListener,calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    private void selectTime(){
+        new TimePickerDialog(ActionWithNoteActivity.this,timeListener,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),true).show();
     }
 
 }

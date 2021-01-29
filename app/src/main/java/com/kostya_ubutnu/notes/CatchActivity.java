@@ -48,7 +48,7 @@ public class CatchActivity extends AppCompatActivity {
 
             viewmodel.updateNote(note);
 
-            startActivity(new Intent(this,MainActivity.class)
+            startActivity(new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     .putExtra(MainActivity.EXTRA_NOTE,note)
             );
         } else {

@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kostya_ubutnu.notes.R;
@@ -117,7 +119,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
                 AlarmManager manager = (AlarmManager) itemView.getContext().getSystemService(Context.ALARM_SERVICE);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(itemView.getContext(), REQUEST_BROAD_CAST_RECEIVER, broadCastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                manager.set(AlarmManager.RTC_WAKEUP, note.getSelectedTime(), pendingIntent);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, note.getSelectedTime(), pendingIntent);
+                }
             }
 
 

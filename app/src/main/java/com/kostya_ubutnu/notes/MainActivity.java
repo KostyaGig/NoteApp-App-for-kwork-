@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +27,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -48,6 +51,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,AdapterLIstener {
 
     public static final String EXTRA_NOTE = "Note";
+
 
     public static final int EXTRA_ADD_NOTE = 1;
     public static final int EXTRA_EDIT_NOTE = 2;
@@ -86,35 +90,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
-        usuallyObserver = new Observer<List<Note>>() {
-            @Override
-            public void onChanged(List<Note> notes) {
+        usuallyObserver = notes -> {
 
-                Log.d("SearchView1","ONCHANGED");
-                Log.d("SearchView1","USUALLY onchanged size = " + notes.size());
+            Log.d("SearchView1","ONCHANGED");
+            Log.d("SearchView1","USUALLY onchanged size = " + notes.size());
 
-                if (notes.size() == 0){
-                    Log.d("SearchView1","notes == null");
-                } else {
-                    Log.d("SearchView1","notes != null");
-                }
-
-                noteCounter.setText("Заметок всего:" +" " + notes.size());
-                listNote = notes;
-                adapter.setList(notes);
+            if (notes.size() == 0){
+                Log.d("SearchView1","notes == null");
+            } else {
+                Log.d("SearchView1","notes != null");
             }
+
+            noteCounter.setText("Заметок всего:" +" " + notes.size());
+            listNote = notes;
+            adapter.setList(notes);
         };
 
-        searchObserver = new Observer<List<Note>>() {
-            @Override
-            public void onChanged(List<Note> notes) {
+        searchObserver = notes -> {
 
-                noteCounter.setText("Заметок всего:" + " " + notes.size());
-                Log.d("SearchView1","SEARCH onchanged size = " + notes.size());
+            noteCounter.setText("Заметок всего:" + " " + notes.size());
+            Log.d("SearchView1","SEARCH onchanged size = " + notes.size());
 
-                listNote = notes;
-                adapter.setList(notes);
-            }
+            listNote = notes;
+            adapter.setList(notes);
         };
 
         fab.setOnClickListener(this);
@@ -199,23 +197,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == EXTRA_ADD_NOTE && resultCode == RESULT_OK && data != null){
-
-            Log.d("dateformat","onactivityresult");
-            Note note = (Note)data.getSerializableExtra(EXTRA_NOTE);
-            viewmodel.insertNote(note);
-        }
-        else if (requestCode == EXTRA_EDIT_NOTE && resultCode == RESULT_OK && data != null){
-            Log.d("dateformat","update");
-            viewmodel.updateNote((Note)data.getSerializableExtra(EXTRA_NOTE));
-        }
-
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         Log.d("dateformat","onstart");
@@ -228,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == R.id.fab) {
 
             Intent noteIntent = new Intent(MainActivity.this, ActionWithNoteActivity.class);
-            startActivityForResult(noteIntent, EXTRA_ADD_NOTE);
+            startActivityForResult(noteIntent,EXTRA_ADD_NOTE);
         }
 
     }
@@ -248,12 +229,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.delete_image:
-                viewmodel.deleteNote(note);
-//                deleteNote(position);
+                showAlertDeleted(note);
                 break;
 
         }
 
+    }
+
+    private void showAlertDeleted(Note note) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Вы действительно хотите удалить заметку с названием " + note.getTitle());
+        builder.setCancelable(true);
+        builder.setNegativeButton("Нет", (dialog, which) -> {
+            dialog.dismiss();
+        }).setPositiveButton("Да",((dialog, which) ->
+        {
+            viewmodel.deleteNote(note);
+        }));
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public ItemTouchHelper.SimpleCallback getHelper(){
@@ -283,4 +279,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == EXTRA_ADD_NOTE && resultCode == RESULT_OK){
+            Note note = (Note) data.getSerializableExtra(EXTRA_NOTE);
+
+            Log.d("CurrentNote","" + note.getId());
+            if (note != null && note.getId() != -1){
+                Log.d("CurrentNote","note title " + note.getTitle() + " id " + note.getId());
+                //insertNote
+                viewmodel.insertNote(note);
+            }else {
+                Toast.makeText(this, "При вставки записи произошла ошибка!", Toast.LENGTH_SHORT).show();
+            }
+
+        } else if (requestCode == EXTRA_EDIT_NOTE && resultCode == RESULT_OK){
+            Note note = (Note) data.getSerializableExtra(EXTRA_NOTE);
+
+            if (note != null && note.getId() != -1){
+                Log.d("CurrentNote","note title " + note.getTitle() + " id " + note.getId());
+                //updateNote
+                viewmodel.updateNote(note);
+            } else {
+                Toast.makeText(this, "При обновлении записи произошла ошибка!", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+    }
 }
