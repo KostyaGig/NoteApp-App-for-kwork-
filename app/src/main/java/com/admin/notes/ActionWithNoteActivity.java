@@ -1,4 +1,4 @@
-package com.kostya_ubutnu.notes;
+package com.admin.notes;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -14,23 +14,16 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ScrollView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.kostya_ubutnu.notes.models.Note;
-import com.kostya_ubutnu.notes.models.Time;
+import com.admin.notes.models.Note;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.IllegalFormatCodePointException;
 
 public class ActionWithNoteActivity extends AppCompatActivity implements View.OnClickListener{
 

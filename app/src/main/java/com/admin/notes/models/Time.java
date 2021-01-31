@@ -1,4 +1,4 @@
-package com.kostya_ubutnu.notes.models;
+package com.admin.notes.models;
 
 public class Time {
 

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.kostya_ubutnu.notes"
+        applicationId "com.admin.notes"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -83,4 +83,6 @@ dependencies {
     //swipe notification
     implementation 'com.tapadoo.android:alerter:2.0.4'
 
+    //material edittext
+    implementation 'com.github.florent37:materialtextfield:1.0.7'
 }

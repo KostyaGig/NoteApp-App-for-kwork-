@@ -1,9 +1,8 @@
-package com.kostya_ubutnu.notes;
+package com.admin.notes;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 
 
@@ -14,15 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -32,20 +25,18 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jakewharton.rxbinding4.widget.RxTextView;
-import com.kostya_ubutnu.notes.adapters.Adapter;
-import com.kostya_ubutnu.notes.interfaces.AdapterLIstener;
-import com.kostya_ubutnu.notes.models.Note;
-import com.kostya_ubutnu.notes.viewmodels.NoteViewmodel;
+import com.admin.notes.adapters.Adapter;
+import com.admin.notes.interfaces.AdapterLIstener;
+import com.admin.notes.models.Note;
+import com.admin.notes.viewmodels.NoteViewmodel;
 import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Predicate;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,AdapterLIstener {

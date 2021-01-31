@@ -1,6 +1,6 @@
-package com.kostya_ubutnu.notes.interfaces;
+package com.admin.notes.interfaces;
 
-import com.kostya_ubutnu.notes.models.Note;
+import com.admin.notes.models.Note;
 
 public interface AdapterLIstener {
 

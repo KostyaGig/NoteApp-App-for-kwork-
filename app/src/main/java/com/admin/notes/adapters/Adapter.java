@@ -1,4 +1,4 @@
-package com.kostya_ubutnu.notes.adapters;
+package com.admin.notes.adapters;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -13,13 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kostya_ubutnu.notes.R;
-import com.kostya_ubutnu.notes.interfaces.AdapterLIstener;
-import com.kostya_ubutnu.notes.models.Note;
-import com.kostya_ubutnu.notes.services.AlarmReceiver;
+import com.admin.notes.R;
+import com.admin.notes.interfaces.AdapterLIstener;
+import com.admin.notes.models.Note;
+import com.admin.notes.services.AlarmReceiver;
 
 import java.util.ArrayList;
 import java.util.List;

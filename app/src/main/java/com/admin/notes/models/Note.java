@@ -1,9 +1,8 @@
-package com.kostya_ubutnu.notes.models;
+package com.admin.notes.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
 
 import java.io.Serializable;
 

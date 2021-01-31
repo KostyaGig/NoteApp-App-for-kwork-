@@ -1,4 +1,4 @@
-package com.kostya_ubutnu.notes.data.db;
+package com.admin.notes.data.db;
 
 import android.app.Application;
 import android.util.Log;
@@ -7,8 +7,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.kostya_ubutnu.notes.data.dao.NoteDao;
-import com.kostya_ubutnu.notes.models.Note;
+import com.admin.notes.data.dao.NoteDao;
+import com.admin.notes.models.Note;
 
 @Database(entities = Note.class,version = 1,exportSchema = false)
 public abstract class NoteDatabase extends RoomDatabase {

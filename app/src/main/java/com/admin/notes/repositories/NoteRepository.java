@@ -1,13 +1,13 @@
-package com.kostya_ubutnu.notes.repositories;
+package com.admin.notes.repositories;
 
 import android.app.Application;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.kostya_ubutnu.notes.data.dao.NoteDao;
-import com.kostya_ubutnu.notes.data.db.NoteDatabase;
-import com.kostya_ubutnu.notes.models.Note;
+import com.admin.notes.data.dao.NoteDao;
+import com.admin.notes.data.db.NoteDatabase;
+import com.admin.notes.models.Note;
 
 import java.util.List;
 

@@ -1,13 +1,12 @@
-package com.kostya_ubutnu.notes.data.dao;
+package com.admin.notes.data.dao;
 
 import androidx.room.Dao;
-import androidx.room.Database;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.kostya_ubutnu.notes.models.Note;
+import com.admin.notes.models.Note;
 
 import java.util.List;
 

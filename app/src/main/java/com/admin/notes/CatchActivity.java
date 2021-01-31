@@ -1,4 +1,4 @@
-package com.kostya_ubutnu.notes;
+package com.admin.notes;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -7,17 +7,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.kostya_ubutnu.notes.models.Note;
-import com.kostya_ubutnu.notes.viewmodels.NoteViewmodel;
+import com.admin.notes.models.Note;
+import com.admin.notes.viewmodels.NoteViewmodel;
 
-import static com.kostya_ubutnu.notes.services.AlarmReceiver.DATE_NOTE;
-import static com.kostya_ubutnu.notes.services.AlarmReceiver.DAY_OF_MONTH;
-import static com.kostya_ubutnu.notes.services.AlarmReceiver.HOURS_NOTE;
-import static com.kostya_ubutnu.notes.services.AlarmReceiver.ID_NOTE;
-import static com.kostya_ubutnu.notes.services.AlarmReceiver.MINUTES_NOTE;
-import static com.kostya_ubutnu.notes.services.AlarmReceiver.TEXT_NOTE;
-import static com.kostya_ubutnu.notes.services.AlarmReceiver.TIME_NOTE;
-import static com.kostya_ubutnu.notes.services.AlarmReceiver.TITLE_NOTE;
+import static com.admin.notes.services.AlarmReceiver.DATE_NOTE;
+import static com.admin.notes.services.AlarmReceiver.DAY_OF_MONTH;
+import static com.admin.notes.services.AlarmReceiver.HOURS_NOTE;
+import static com.admin.notes.services.AlarmReceiver.ID_NOTE;
+import static com.admin.notes.services.AlarmReceiver.MINUTES_NOTE;
+import static com.admin.notes.services.AlarmReceiver.TEXT_NOTE;
+import static com.admin.notes.services.AlarmReceiver.TIME_NOTE;
+import static com.admin.notes.services.AlarmReceiver.TITLE_NOTE;
 
 public class CatchActivity extends AppCompatActivity {
 

@@ -1,18 +1,16 @@
-package com.kostya_ubutnu.notes.viewmodels;
+package com.admin.notes.viewmodels;
 
 import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.kostya_ubutnu.notes.models.Note;
-import com.kostya_ubutnu.notes.repositories.NoteRepository;
+import com.admin.notes.models.Note;
+import com.admin.notes.repositories.NoteRepository;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;

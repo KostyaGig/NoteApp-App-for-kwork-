@@ -1,4 +1,4 @@
-package com.kostya_ubutnu.notes;
+package com.admin.notes;
 
 import android.content.Context;
 

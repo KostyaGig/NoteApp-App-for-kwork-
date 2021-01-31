@@ -1,11 +1,11 @@
-package com.kostya_ubutnu.notes.services;
+package com.admin.notes.services;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.kostya_ubutnu.notes.CatchActivity;
+import com.admin.notes.CatchActivity;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
